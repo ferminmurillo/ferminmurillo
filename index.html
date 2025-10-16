@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📤 Transferencia Simple de Fotos Móvil</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --bg-light: #f4f7f6;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .section {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        /* Estilos de Botones */
+        button, .custom-file-upload {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .upload-area input[type="file"] {
+            display: none; /* Ocultar el input nativo */
+        }
+
+        .custom-file-upload {
+            background-color: var(--success-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #1e7e34;
+        }
+
+        .btn-generate {
+            background-color: var(--warning-color);
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+
+        .btn-generate:hover {
+            background-color: #d39e00;
+        }
+
+        /* Enlace de Salida */
+        #link-output {
+            margin-top: 15px;
+            padding: 15px;
+            border: 2px dashed var(--primary-color);
+            background-color: #e6f0ff;
+            border-radius: 6px;
+            word-break: break-all;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .instructions {
+            text-align: left;
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📲 Intercambio de Fotos Android ↔️ iOS</h1>
+        <p>Utiliza este portal para generar y compartir rápidamente un enlace a tus fotos.</p>
+
+        <div class="section upload-area">
+            <h2>1. Subir y Preparar Fotos</h2>
+            <p>Selecciona las fotos que quieres enviar **usando un servicio en la nube** (como Google Drive, Dropbox, iCloud o OneDrive) y obtén el **enlace compartible** de dicho servicio.</p>
+
+            <input type="file" id="photo-upload" accept="image/*" multiple>
+            <label for="photo-upload" class="custom-file-upload">🖼️ Seleccionar Fotos (Localmente)</label>
+            <p id="upload-status" style="color: gray;">(Archivos seleccionados: 0)</p>
+
+            <p style="margin-top: 15px; font-weight: bold;">Una vez que tengas el enlace del servicio en la nube:</p>
+            <input type="url" id="cloud-link" placeholder="Pega aquí el enlace de Google Drive / Dropbox / iCloud..." style="width: 80%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        </div>
+
+        <div class="section">
+            <h2>2. Generar Enlace Único y Compartir</h2>
+            <button class="btn-generate" onclick="generarLink()">✨ Generar Acceso para Otros Dispositivos</button>
+
+            <div id="link-output">
+                Copia este enlace: <span id="shareable-link">***Enlace simulado aparecerá aquí***</span>
+            </div>
+            
+            <p style="font-size: 0.85em; color: #dc3545; margin-top: 10px;">
+                **Nota:** Este código no almacena las fotos. El enlace generado es el que tú pegaste del servicio en la nube.
+            </p>
+        </div>
+
+        <div class="instructions">
+            <h3>Paso a Paso Recomendado:</h3>
+            <ol>
+                <li>En tu teléfono (Android o iOS), **sube** las fotos que quieres transferir a Google Drive, Dropbox, o iCloud.</li>
+                <li>**Copia el enlace de compartir** público que te da ese servicio.</li>
+                <li>Pega ese enlace en el campo de texto de arriba.</li>
+                <li>Haz clic en "**Generar Acceso**" para que el enlace aparezca claramente.</li>
+                <li>**Copia y envía** el enlace final al otro dispositivo.</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // --- FUNCIÓN JAVASCRIPT ---
+
+        // Función para actualizar el estado de los archivos seleccionados (solo visual)
+        document.getElementById('photo-upload').addEventListener('change', function() {
+            const fileCount = this.files.length;
+            const statusElement = document.getElementById('upload-status');
+            
+            if (fileCount > 0) {
+                statusElement.textContent = `✅ Archivos seleccionados: ${fileCount} listos para subir a tu nube.`;
+            } else {
+                statusElement.textContent = `(Archivos seleccionados: 0)`;
+            }
+        });
+
+        // Función principal para generar el enlace
+        function generarLink() {
+            const cloudLinkInput = document.getElementById('cloud-link');
+            const linkOutputSpan = document.getElementById('shareable-link');
+            const userLink = cloudLinkInput.value.trim();
+
+            if (!userLink) {
+                alert('🚨 Por favor, pega primero el enlace de Google Drive, Dropbox o iCloud.');
+                linkOutputSpan.textContent = '***Enlace simulado aparecerá aquí***';
+                return;
+            }
+
+            // Aquí simulamos que se ha "generado" un enlace fácil de copiar, que es simplemente el enlace pegado por el usuario.
+            linkOutputSpan.textContent = userLink;
+            
+            // Copiar el enlace al portapapeles del usuario (si el navegador lo permite)
+            navigator.clipboard.writeText(userLink).then(() => {
+                alert(`✅ Enlace copiado al portapapeles. ¡Compártelo ahora!`);
+            }).catch(err => {
+                console.error('No se pudo copiar el enlace:', err);
+                alert('✅ Enlace generado. Por favor, cópialo manualmente.');
+            });
+        }
+    </script>
+
+</body>
+</html>
